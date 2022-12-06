@@ -14,7 +14,7 @@ public abstract class Day {
     }
 
     public File getInputFile() {
-        String filename = String.format("input\\year%d\\day%02d.txt", year, day);
+        String filename = String.format("input/year%d/day%02d.txt", year, day);
         return new File(filename);
     }
 
