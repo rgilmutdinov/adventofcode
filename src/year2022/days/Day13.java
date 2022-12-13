@@ -87,14 +87,10 @@ public class Day13 extends Day2022 {
                 }
                 return Integer.compare(list.size(), o.list.size());
             } else if (isList() && o.isInteger()) {
-                NestedInt right = new NestedInt();
-                right.add(o);
-                return compareTo(right);
-            } else {
-                NestedInt left = new NestedInt();
-                left.add(this);
-                return left.compareTo(o);
+                return compareTo(NestedInt.asList(o));
             }
+            
+            return NestedInt.asList(this).compareTo(o);
         }
     }
 
