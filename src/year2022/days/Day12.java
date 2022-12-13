@@ -62,7 +62,7 @@ public class Day12 extends Day2022 {
             }
             steps++;
         }
-        return steps;
+        return -1;
     }
 
     @Override
@@ -124,7 +124,7 @@ public class Day12 extends Day2022 {
             }
             steps++;
         }
-        return steps;
+        return -1;
     }
 
     private int[] getStart(char[][] grid) {

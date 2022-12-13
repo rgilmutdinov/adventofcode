@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Day07 extends Day2022 {
     public static class Trie {
-        public class TrieNode {
+        public static class TrieNode {
             public HashMap<String, TrieNode> children;
             public boolean isFile;
             public long totalSize;
@@ -73,6 +73,7 @@ public class Day07 extends Day2022 {
             }
             return ceil;
         }
+
         private long getTotalSize(TrieNode curr, long limit) {
             long size = 0;
             for (TrieNode child : curr.children.values()) {
