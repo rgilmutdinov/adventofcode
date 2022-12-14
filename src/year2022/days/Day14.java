@@ -103,10 +103,9 @@ public class Day14 extends Day2022 {
         while (scanner.hasNextLine()) {
             List<int[]> path = new ArrayList<>();
             String s = scanner.nextLine();
-            String[] parts = s.split("->");
+            String[] parts = s.split(" -> ");
             for (String part : parts) {
-                String pt = part.trim();
-                String[] coord = pt.split(",");
+                String[] coord = part.split(",");
 
                 int[] point = new int[] { Integer.parseInt(coord[0]), Integer.parseInt(coord[1] )};
 
