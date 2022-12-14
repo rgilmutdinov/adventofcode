@@ -9,7 +9,8 @@ public class Day12 extends Day2022 {
         super(12);
     }
 
-    private static final int[][] DIRECTIONS = {{0,1},{-1,0},{0,-1},{1,0}};
+    private static final int[][] DIRECTIONS = { { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 0 } };
+
     @Override
     public Object solvePart1() {
         Scanner scanner = getInputScanner();
