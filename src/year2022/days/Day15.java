@@ -83,34 +83,37 @@ public class Day15 extends Day2022 {
             }
         }
 
-        long max = 4000000L;
-        for (long y = 0; y <= max; y++) {
-            long x = 0;
-            while (x <= max) {
-                boolean found = true;
-                for (int[] s : sensors) {
-                    long dist = distance(s[0], s[1], x, y);
-                    if (dist <= s[2]) {
-                        found = false;
-                        x = s[0] + s[2] - Math.abs(s[1] - y) + 1;
-                        break;
-                    }
-                }
+        Set<Integer> acoeffs = new HashSet<>();
+        Set<Integer> bcoeffs = new HashSet<>();
+        for (int[] s : sensors) {
+            int x = s[0];
+            int y = s[1];
+            int dist = s[2];
 
-                if (found) {
-                    return x * 4000000L + y;
+            acoeffs.add(y - x + dist + 1);
+            acoeffs.add(y - x - dist - 1);
+            bcoeffs.add(x + y + dist + 1);
+            bcoeffs.add(x + y - dist - 1);
+        }
+
+        long bound = 4_000_000L;
+        for (int a : acoeffs) {
+            for (int b : bcoeffs) {
+                int x = (b - a) / 2;
+                int y = (a + b) / 2;
+                if (x <= 0 || x >= bound || y <= 0 || y >= bound) {
+                    continue;
+                }
+                if (sensors.stream().allMatch(s -> distance(x, y, s[0], s[1]) > s[2])) {
+                    return x * 4_000_000L + y;
                 }
             }
-            y++;
         }
+
         return -1;
     }
 
     private int distance(int x0, int y0, int x1, int y1) {
-        return Math.abs(x0 - x1) + Math.abs(y0 - y1);
-    }
-
-    private long distance(long x0, long y0, long x1, long y1) {
         return Math.abs(x0 - x1) + Math.abs(y0 - y1);
     }
 
