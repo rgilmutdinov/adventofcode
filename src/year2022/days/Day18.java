@@ -9,57 +9,6 @@ public class Day18 extends Day2022 {
         super(18);
     }
 
-    public static class UF {
-        private final int[] root;
-        private final int[] rank;
-        private int count;
-
-        public UF(int n) {
-            root = new int[n];
-            rank = new int[n];
-
-            for (int i = 0; i < n; i++) {
-                root[i] = i;
-                rank[i] = 1;
-            }
-
-            count = n;
-        }
-
-        public int find(int x) {
-            if (x == root[x]) {
-                return x;
-            }
-
-            return root[x] = find(root[x]); // recursive path compression
-        }
-
-        public boolean union(int x, int y) {
-            int rootx = find(x);
-            int rooty = find(y);
-
-            if (rootx == rooty) {
-                return false;
-            }
-
-            if (rank[rootx] < rank[rooty]) {
-                root[rootx] = rooty;
-            } else if (rank[rootx] > rank[rooty]) {
-                root[rooty] = rootx;
-            } else {
-                root[rootx] = rooty;
-                rank[rooty]++;
-            }
-
-            count--;
-            return true;
-        }
-
-        public int count() {
-            return this.count;
-        }
-    }
-
     public static class Point {
         public int x;
         public int y;
@@ -97,7 +46,7 @@ public class Day18 extends Day2022 {
     public Object solvePart1() {
         Scanner scanner = getInputScanner();
 
-        Map<Point, Integer> points = new HashMap<>();
+        Set<Point> points = new HashSet<>();
         while (scanner.hasNextLine()) {
             String s = scanner.nextLine();
             String[] parts = s.split(",");
@@ -108,23 +57,18 @@ public class Day18 extends Day2022 {
                 Integer.parseInt(parts[2])
             );
 
-            points.put(point, points.size());
+            points.add(point);
         }
 
-        List<Point> list = new ArrayList<>(points.keySet());
-        UF uf = new UF(points.size());
         int adjacent = 0;
-        for (int i = 0; i < points.size(); i++) {
-            Point p = list.get(i);
+        for (Point p : points) {
             for (int[] direction : DIRECTIONS) {
                 int x = p.x + direction[0];
                 int y = p.y + direction[1];
                 int z = p.z + direction[2];
 
                 Point nei = new Point(x, y, z);
-                if (points.containsKey(nei)) {
-                    int j = points.get(nei);
-                    uf.union(i, j);
+                if (points.contains(nei)) {
                     adjacent++;
                 }
             }
