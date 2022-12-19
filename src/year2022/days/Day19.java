@@ -126,6 +126,7 @@ public class Day19 extends Day2022 {
             }
 
             for (int i = 0; i < s.a.length - 1; i++) {
+                s.r[i] = Math.min(s.r[i], maxCosts[i]);
                 s.a[i] = Math.min(s.a[i], s.t * maxCosts[i] - s.r[i] * (s.t - 1));
             }
 
