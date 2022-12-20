@@ -1,7 +1,7 @@
 package year2022;
 
 import common.Day;
-import year2022.days.Day20;
+import year2022.days.Day21;
 
 import java.util.concurrent.Callable;
 
