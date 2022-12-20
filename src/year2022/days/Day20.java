@@ -2,7 +2,6 @@ package year2022.days;
 
 import year2022.Day2022;
 
-import java.sql.Connection;
 import java.util.*;
 
 public class Day20 extends Day2022 {
@@ -56,9 +55,9 @@ public class Day20 extends Day2022 {
             j++;
         }
 
-        return list.get(mod(j + 1000, list.size())).value +
-                list.get(mod(j + 2000, list.size())).value +
-                list.get(mod(j + 3000, list.size())).value;
+        return list.get(Math.floorMod(j + 1000, list.size())).value +
+                list.get(Math.floorMod(j + 2000, list.size())).value +
+                list.get(Math.floorMod(j + 3000, list.size())).value;
     }
 
     @Override
@@ -83,9 +82,9 @@ public class Day20 extends Day2022 {
             j++;
         }
 
-        return list.get(mod(j + 1000, list.size())).value +
-                list.get(mod(j + 2000, list.size())).value +
-                list.get(mod(j + 3000, list.size())).value;
+        return list.get(Math.floorMod(j + 1000, list.size())).value +
+                list.get(Math.floorMod(j + 2000, list.size())).value +
+                list.get(Math.floorMod(j + 3000, list.size())).value;
     }
 
     private void mix(Deque<Number> deque) {
@@ -95,7 +94,7 @@ public class Day20 extends Day2022 {
             }
 
             Number number = deque.pollFirst();
-            int shift = mod(number.value, deque.size());
+            int shift = Math.floorMod(number.value, deque.size());
 
             for (int j = 0; j < shift; j++) {
                 deque.addLast(deque.pollFirst());
@@ -103,9 +102,5 @@ public class Day20 extends Day2022 {
 
             deque.addLast(number);
         }
-    }
-
-    private int mod(long n, int m) {
-        return (int) ((n % m) + m) % m;
     }
 }
