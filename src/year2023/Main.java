@@ -1,13 +1,13 @@
-package year2022;
+package year2023;
 
 import common.Day;
-import year2022.days.*;
+import year2023.days.Day02;
 
 import java.util.concurrent.Callable;
 
 public class Main {
-    public static void main2022(String[] args) throws Exception {
-        Day problem = new Day25();
+    public static void main(String[] args) throws Exception {
+        Day problem = new Day02();
         measure(problem::solvePart1);
         measure(problem::solvePart2);
     }
