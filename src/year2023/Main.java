@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Day problem = new Day05();
+        Day problem = new Day06();
         measure(problem::solvePart1);
         measure(problem::solvePart2);
     }
