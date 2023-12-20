@@ -316,9 +316,137 @@ public class Day19 extends Day2023 {
         return total;
     }
 
+    public record Range(long lo, long hi) {
+        public Range copy() { return new Range(lo, hi); }
+        public boolean isValid() {
+            return lo <= hi;
+        }
+
+        public long score() {
+            return hi - lo + 1;
+        }
+    }
+    public record RangeSet(Range x, Range m, Range a, Range s) {
+        public RangeSet copy() { return new RangeSet(x.copy(), m.copy(), a.copy(), s.copy()); }
+        public boolean isValid() {
+            return x.isValid() && m.isValid() && a.isValid() && s.isValid();
+        }
+
+        public long score() {
+            return x.score() * m.score() * a.score() * s.score();
+        }
+    }
+
+    public enum Op {
+        GREATER,
+        LESS,
+        GREATER_OR_EQUAL,
+        LESS_OR_EQUAL
+    }
+
+    private Range newRange(Op op, long val, Range range) {
+        long lo = range.lo;
+        long hi = range.hi;
+        if (op == Op.GREATER) {
+            lo = Math.max(lo, val + 1);
+        } else if (op == Op.LESS) {
+            hi = Math.min(hi, val - 1);
+        } else if (op == Op.GREATER_OR_EQUAL) {
+            lo = Math.max(lo, val);
+        } else if (op == Op.LESS_OR_EQUAL) {
+            hi = Math.min(hi, val);
+        }
+        return new Range(lo, hi);
+    }
+
+    private RangeSet newRangeSet(Op op, long val, Category category, RangeSet rangeSet) {
+        RangeSet copySet = rangeSet.copy();
+        Range x = copySet.x;
+        Range m = copySet.m;
+        Range a = copySet.a;
+        Range s = copySet.s;
+        switch (category) {
+            case X -> x = newRange(op, val, x);
+            case M -> m = newRange(op, val, m);
+            case A -> a = newRange(op, val, a);
+            case S -> s = newRange(op, val, s);
+        }
+        return new RangeSet(x, m, a, s);
+    }
+
+    public record State(String workflowName, RangeSet rangeSet) {
+        public boolean isValid() {
+            return rangeSet.isValid();
+        }
+
+        public long score() {
+            return rangeSet.score();
+        }
+    }
+
     @Override
     public Object solvePart2() {
         Scanner scanner = getInputScanner();
-        return null;
+        Map<String, String> workflows = new HashMap<>();
+        while (true) {
+            String line = scanner.nextLine();
+            if (line.isEmpty()) {
+                break;
+            }
+
+            String name = line.substring(0, line.indexOf('{'));
+            String workflow = line.substring(name.length() + 1, line.length() - 1);
+            workflows.put(name, workflow);
+        }
+
+        long total = 0L;
+        Queue<State> queue = new ArrayDeque<>();
+        RangeSet startRanges = new RangeSet(
+            new Range(1L, 4000L),
+            new Range(1L, 4000L),
+            new Range(1L, 4000L),
+            new Range(1L, 4000L)
+        );
+
+        queue.add(new State("in", startRanges));
+        while (!queue.isEmpty()) {
+            State state = queue.poll();
+            if (!state.isValid()) {
+                continue;
+            }
+
+            RangeSet rangeSet = state.rangeSet;
+            String name = state.workflowName;
+            if (name.equals("A")) {
+                total += state.score();
+            } else if (!name.equals("R")) {
+                String workflow = workflows.get(name);
+                String[] rules = workflow.split(",");
+                for (String rule : rules) {
+                    if (rule.contains(":")) {
+                        String[] parts = rule.split(":");
+
+                        Category cat = Category.parse(parts[0].substring(0, 1));
+                        Op op = parts[0].charAt(1) == '>' ? Op.GREATER : Op.LESS;
+                        long val = Long.parseLong(parts[0].substring(2));
+                        String to = parts[1];
+
+                        queue.offer(new State(
+                            to,
+                            newRangeSet(op, val, cat, rangeSet)
+                        ));
+
+                        rangeSet = newRangeSet(op == Op.GREATER ? Op.LESS_OR_EQUAL : Op.GREATER_OR_EQUAL, val, cat, rangeSet);
+                    } else {
+                        queue.offer(new State(
+                            rule,
+                            rangeSet.copy()
+                        ));
+                    }
+                }
+            }
+        }
+        return total;
     }
+
 }
