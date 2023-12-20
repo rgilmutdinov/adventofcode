@@ -252,7 +252,7 @@ public class Day19 extends Day2023 {
         void visitSendToAction(SendToAction action);
     }
 
-    public class System {
+    public static class System {
         private final Map<String, Workflow> workflows;
         public System(Map<String, Workflow> workflows) {
             this.workflows = workflows;
