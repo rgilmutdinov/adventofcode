@@ -29,7 +29,7 @@ public class Day02 extends Day2024 {
     private boolean isIncreasing(long[] numbers) {
         for (int i = 0; i < numbers.length - 1; i++) {
             long diff = numbers[i] - numbers[i + 1];
-            if (diff > 3 || diff < 1) {
+            if (!isInRange(diff)) {
                 return false;
             }
         }
@@ -53,29 +53,35 @@ public class Day02 extends Day2024 {
     }
 
     private boolean isTolerateIncreasing(long[] numbers) {
-        for (int i = 0; i < numbers.length; i++) {
-            if (isIncreasing(numbers, i)) {
-                return true;
-            }
+        int size = numbers.length;
+        long[] diffs = new long[size - 1];
+        for (int i = 0; i < diffs.length; i++) {
+            diffs[i] = numbers[i + 1] - numbers[i];
         }
-        return false;
-    }
 
-    private boolean isIncreasing(long[] numbers, int ignoreIndex) {
-        for (int i = ignoreIndex == 0 ? 1 : 0; i < numbers.length - 1; i++) {
-            if (i + 1 == ignoreIndex) {
+        boolean tolerated = false;
+        for (int i = 0; i < diffs.length; i++) {
+            long diff = diffs[i];
+            if (isInRange(diff)) {
                 continue;
             }
 
-            long diff = i == ignoreIndex
-                ? numbers[i - 1] - numbers[i + 1]
-                : numbers[i] - numbers[i + 1];
-
-            if (diff > 3 || diff < 1) {
+            if (tolerated) {
                 return false;
             }
+
+            if (i != diffs.length - 1 && (i != 0 || !isInRange(diffs[i + 1]))) {
+                diffs[i + 1] += diff;
+            }
+
+            tolerated = true;
         }
+
         return true;
+    }
+
+    private boolean isInRange(long diff) {
+        return diff >= 1 && diff <= 3;
     }
 
     private long[] reverse(long[] numbers) {
