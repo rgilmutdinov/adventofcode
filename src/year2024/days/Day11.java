@@ -29,7 +29,7 @@ public class Day11 extends Day2024 {
     private long solve(Scanner scanner, int maxSteps) {
         List<Long> stones = readNumbers(scanner);
         long total = 0;
-        Map<Long, Map<Integer, Long>> cache = new HashMap<>();
+        Map<CacheKey, Long> cache = new HashMap<>();
         for (long stone : stones) {
             total += makeBlinks(stone, 0, maxSteps, cache);
         }
@@ -37,16 +37,14 @@ public class Day11 extends Day2024 {
         return total;
     }
 
-    private long makeBlinks(long stone, int step, int maxSteps, Map<Long, Map<Integer, Long>> cache) {
+    private long makeBlinks(long stone, int step, int maxSteps, Map<CacheKey, Long> cache) {
         if (step >= maxSteps) {
             return 1;
         }
 
-        if (cache.containsKey(stone)) {
-            var stoneCache = cache.get(stone);
-            if (stoneCache.containsKey(step)) {
-                return stoneCache.get(step);
-            }
+        CacheKey key = new CacheKey(stone, step);
+        if (cache.containsKey(key)) {
+            return cache.get(key);
         }
 
         List<Long> nextStones = blink(stone);
@@ -55,7 +53,7 @@ public class Day11 extends Day2024 {
             total += makeBlinks(nextStone, step + 1, maxSteps, cache);
         }
 
-        cache.computeIfAbsent(stone, s -> new HashMap<>()).putIfAbsent(step, total);
+        cache.put(key, total);
         return total;
     }
 
@@ -92,4 +90,6 @@ public class Day11 extends Day2024 {
         }
         return digits;
     }
+
+    private record CacheKey(long stone, int step) { }
 }
