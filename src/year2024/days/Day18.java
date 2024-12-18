@@ -35,18 +35,25 @@ public class Day18 extends Day2024 {
         Scanner scanner = getInputScanner();
         List<Pos> bytes = readBytes(scanner);
 
-        char[][] map = createMap(TOTAL_ROWS, TOTAL_COLS, List.of());
         Pos start = new Pos(0, 0);
         Pos finish = new Pos(TOTAL_ROWS - 1, TOTAL_COLS - 1);
-        for (Pos b : bytes) {
-            map[b.row][b.col] = '#';
+
+        int lo = 0;
+        int hi = bytes.size();
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+
+            char[][] map = createMap(TOTAL_ROWS, TOTAL_COLS, bytes.subList(0, mid + 1));
             int cost = minCost(map, start, finish);
             if (cost == -1) {
-                return String.format("%d,%d", b.row, b.col);
+                hi = mid;
+            } else {
+                lo = mid + 1;
             }
         }
 
-        throw new AssertionError("No solution found.");
+        Pos b = bytes.get(lo);
+        return String.format("%d,%d", b.row, b.col);
     }
 
     private int minCost(char[][] map, Pos start, Pos finish) {
